@@ -5,6 +5,11 @@ using UnityEditor;
 
 public class PlayerController : MonoBehaviour
 {
+    //カメラの範囲。
+    const float Camera_up = 4.8f;
+    const float Camera_down = -4.8f;
+    const float Camera_right = 5.0f;
+    const float Camera_left = -5.0f;
     // Start is called before the first frame update
     void Start()
     {
@@ -43,6 +48,9 @@ public class PlayerController : MonoBehaviour
         float yr = Input.GetAxisRaw("Vertical2");
         float z = xr * yr;
         this.transform.rotation =  new Quaternion(0,0,z,1);
+        //カメラ範囲内での移動制限。
+        this.transform.position = new Vector3(Mathf.Clamp(this.transform.position.x, Camera_left, Camera_right),
+           Mathf.Clamp(this.transform.position.y, Camera_down, Camera_up));
 
     }
 }
