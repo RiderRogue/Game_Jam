@@ -14,9 +14,9 @@ public class TitleDirector : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) || Input.GetKeyDown("space")) //マウス左クリック、スペースキーを押した場合
+        if (Input.anyKey) //任意のボタンを押した場合。
         {
-            SceneManager.LoadScene("MainGameScene");//gameシーンをロードする
+            SceneManager.LoadScene("MainGameScene");//gameシーンをロードする。
         }
     }
 }
