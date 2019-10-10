@@ -10,6 +10,9 @@ public class PlayerController : MonoBehaviour
     const float Camera_down = -4.8f;
     const float Camera_right = 5.0f;
     const float Camera_left = -5.0f;
+
+    //プレイヤーのHP。
+    public float P_HP = 100.0f;
     // Start is called before the first frame update
     void Start()
     {
