@@ -12,59 +12,87 @@ public class EnemyController : MonoBehaviour
     const float Camera_right = 5.0f;
     const float Camera_left = -5.0f;
 
-    float speed;
-    float enemy_x =0.0f;
-    float enemy_y = 0.0f;
-
-    //GameObject player;
-
-    Vector3 forwardVector=new Vector3(0,1,0);
+    GameObject player;
+    public GameObject enemy_bulletPrefab;
+    Vector3 forwardVector = new Vector3(0, 1, 0);
     //0で移動、1で回転、2で攻撃。
     int state = 0;
+    //敵の行動に関わるカウント。
     int count = 0;
+    //ランダム。
+    int random = 1;
+    float player_rot = 0.0f;
     void Start()
     {
-       // player = GameObject.Find("TestPlayerBody");
+        player = GameObject.Find("TestPlayerBody");
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
         switch (state)
         {
             case 0:
-                this.transform.position += forwardVector * 0.2f;
+                this.transform.position += forwardVector * (random / 10.0f);
 
                 break;
             case 1://回転。
-                forwardVector = Quaternion.Euler(0, 0, 4) * forwardVector;
-                this.transform.Rotate(new Vector3(0, 0, 4));
+                //forwardVector（前方ベクトル）も傾ける。
+                forwardVector = Quaternion.Euler(0, 0, (random % 5))* forwardVector;
+                this.transform.Rotate(new Vector3(0, 0, (random%5)));
                 break;
-            case 2:
+            case 2://攻撃。
+                if (count == 0)
+                {
+                    Vector3 player_enemy = player.transform.position - this.transform.position;
+                    player_enemy.Normalize();
+                    float cos = Vector3.Dot(player_enemy, forwardVector);
+                    float rad = Mathf.Acos(cos);
+                    float degree = rad * Mathf.Rad2Deg;//プレイヤーまでの角度を求める。
+                    degree /= 10.0f;//10当分。10フレームで回転させる。
+                    player_rot = degree;
+                }
+
+                if (count < 10)
+                {
+                    forwardVector = Quaternion.Euler(0, 0, player_rot) * forwardVector;
+                    this.transform.Rotate(new Vector3(0, 0, player_rot));
+                }
+                else
+                {
+                    EnemyShot();
+                }
 
                 break;
             default:
                 break;
         }
 
-       
+
 
         //カメラ範囲内での移動制限。
-        this.transform.position= new Vector3(Mathf.Clamp(this.transform.position.x, Camera_left, Camera_right),
-           Mathf.Clamp(this.transform.position.y, Camera_down, Camera_up) );
+        this.transform.position = new Vector3(Mathf.Clamp(this.transform.position.x, Camera_left, Camera_right),
+           Mathf.Clamp(this.transform.position.y, Camera_down, Camera_up));
 
-        
+
         count++;
         if (count > 30)
         {
             state++;
-            if (state >= 2)
+            if (state > 2)
             {
                 state = 0;
             }
             count = 0;
+            random = Random.Range(1, 6);
         }
 
+    }
+
+    public void EnemyShot()
+    {
+        GameObject go = Instantiate(enemy_bulletPrefab) as GameObject;
+        
     }
 }
