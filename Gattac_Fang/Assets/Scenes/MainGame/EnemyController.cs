@@ -84,7 +84,7 @@ public class EnemyController : MonoBehaviour
         if (count > 30)
         {
             state++;
-            if (state > 2)
+            if (state > 1)
             {
                 state = 0;
             }
