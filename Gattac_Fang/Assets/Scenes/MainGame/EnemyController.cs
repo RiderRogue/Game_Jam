@@ -84,12 +84,24 @@ public class EnemyController : MonoBehaviour
         if (count > 30)
         {
             state++;
-            if (state > 1)
+            if (state > 2)
             {
                 state = 0;
             }
+            if (state > 1)
+            {
+                if (Random.Range(1, 4) % 3 == 0)
+                {
+                    state = 2;
+                }
+                else
+                {
+                    state = 0;
+                }
+                
+            }
             count = 0;
-            random = Random.Range(1.0f, 6.0f);
+            random = Random.Range(1.0f, 3.0f);
         }
 
     }
