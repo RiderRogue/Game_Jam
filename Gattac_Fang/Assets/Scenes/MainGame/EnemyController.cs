@@ -20,7 +20,7 @@ public class EnemyController : MonoBehaviour
     //敵の行動に関わるカウント。
     int count = 0;
     //ランダム。
-    int random = 1;
+    float random = 1.0f;
     float player_rot = 0.0f;
     void Start()
     {
@@ -39,8 +39,8 @@ public class EnemyController : MonoBehaviour
                 break;
             case 1://回転。
                 //forwardVector（前方ベクトル）も傾ける。
-                forwardVector = Quaternion.Euler(0, 0, (random % 5))* forwardVector;
-                this.transform.Rotate(new Vector3(0, 0, (random%5)));
+                forwardVector = Quaternion.Euler(0, 0, (random % 5.0f))* forwardVector;
+                this.transform.Rotate(new Vector3(0, 0, (random%5.0f)));
                 break;
             case 2://攻撃。
                 if (count == 0)
@@ -61,7 +61,11 @@ public class EnemyController : MonoBehaviour
                 }
                 else
                 {
-                    EnemyShot();
+                    if (count%8==0)
+                    {
+                        EnemyShot();
+                    }
+                   
                 }
 
                 break;
@@ -85,14 +89,17 @@ public class EnemyController : MonoBehaviour
                 state = 0;
             }
             count = 0;
-            random = Random.Range(1, 6);
+            random = Random.Range(1.0f, 6.0f);
         }
 
     }
 
     public void EnemyShot()
     {
+        //弾の生成と初期化。
         GameObject go = Instantiate(enemy_bulletPrefab) as GameObject;
-        
+       
+        go.GetComponent<enemy_bulletController>().Shot(
+            forwardVector,this.transform.position,random);
     }
 }
